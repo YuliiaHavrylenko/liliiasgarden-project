@@ -1,4 +1,5 @@
 from django import forms
+from .models import Soup, Size
 
 
 # class SoupForm(forms.Form):
@@ -6,3 +7,12 @@ from django import forms
 #     topping2 = forms.CharField(label='Topping 2', max_length=100)
 #     size = forms.ChoiceField(label='Size', choices=[('small', 'small'), ('medium', 'medium'), ('large', 'large')])
 
+class SoupForm(forms.ModelForm):
+    class Meta:
+        model = Soup
+        fields = ['topping1', 'topping2', 'size']
+        labels = {'topping1': "Topping 1", 'topping2': "Topping 2"}
+
+
+class MultipleSoupForm(forms.Form):
+    number = forms.IntegerField(min_value=2, max_value=10)

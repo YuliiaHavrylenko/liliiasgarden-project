@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .forms import SoupForm, MultipleSoupForm
 from django.forms import formset_factory
+from .models import Soup
 
 
 def home(request):
@@ -12,13 +13,15 @@ def order(request):
     if request.method == 'POST':
         filled_form = SoupForm(request.POST)
         if filled_form.is_valid():
-            filled_form.save()
+            created_soup = filled_form.save()
+            created_soup_pk = created_soup.id
             note = 'Thanks for ordering! Your %s soup with %s and %s is on its way.' \
                    % (filled_form.cleaned_data['size'], filled_form.cleaned_data['topping1'],
                       filled_form.cleaned_data['topping2'],)
             new_form = SoupForm
             return render(request, 'soup/order.html',
-                          {'soupform': new_form, 'note': note, 'multiple_form': multiple_form})
+                          {"created_soup_pk": created_soup_pk, 'soupform': new_form, 'note': note,
+                           'multiple_form': multiple_form})
     else:
         form = SoupForm
         return render(request, 'soup/order.html', {'soupform': form, 'multiple_form': multiple_form})
@@ -43,3 +46,16 @@ def soups(request):
         return render(request, 'soup/soups.html', {'note': note, 'formset': formset})
     else:
         return render(request, 'soup/soups.html', {'formset': formset})
+
+
+def edit_order(request, pk):
+    soup = Soup.objects.get(pk=pk)
+    form = SoupForm(instance=soup)
+    if request.method == "POST":
+        filled_form = SoupForm(request.POST, instance=soup)
+        if filled_form.is_valid():
+            filled_form.save()
+            form = filled_form
+            note = 'Order has been updated.'
+            return render(request, 'soup/edit_order.html', {'note': note, 'soupform': form, 'soup': soup})
+    return render(request, 'soup/edit_order.html', {'soupform': form, 'soup': soup})

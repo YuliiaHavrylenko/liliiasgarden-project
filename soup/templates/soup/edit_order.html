@@ -1,0 +1,7 @@
+<h1>Edit Soup</h1>
+<h2>{{ note }}</h2>
+<form action="{% url 'edit_order' soup.id %}" method="POST">
+    {% csrf_token %}
+    {{ soupform }}
+    <input type="submit" value="Edit Soup">
+</form>

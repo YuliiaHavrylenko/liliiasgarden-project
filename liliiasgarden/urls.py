@@ -22,4 +22,5 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("order", views.order, name="order"),
     path('soups', views.soups, name="soups"),
+    path("order/<int:pk>", views.edit_order, name="edit_order"),
 ]

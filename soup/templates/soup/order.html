@@ -1,4 +1,9 @@
-<h1>Order a Soup</h1>
+{% extends 'soup/base.html' %}
+{% block content %}
+
+  {% load widget_tweaks %}
+  <div class="container">
+  <h1>Order a Soup</h1>
 
 <h2>{{ note }}</h2>
 {% if created_soup_pk %}
@@ -7,10 +12,15 @@
 
 <form action="{% url 'order' %}" method="POST">
     {% csrf_token %}
-    {{ soupform }}
+    {% for field in soupform %}
+        <div class="form-group">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {% render_field field class="form-control" %}
+        </div>
+    {% endfor %}
     <input type="submit" value="Order Soup">
 </form>
-
 <br><br>
 <p>Want more than one soup?</p>
 
@@ -18,3 +28,6 @@
     {{ multiple_form }}
     <input type="submit" value="Get Soups">
 </form>
+</div>
+
+{% endblock %}

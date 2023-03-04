@@ -1,13 +1,18 @@
+{% extends 'soup/base.html' %}
+{% block content %}
+
+<div class="container">
 <h1>Order Soups</h1>
 <h2>{{ note }}</h2>
 
 <form action="{% url 'soups' %}" method="post">
     {% csrf_token %}
     {{ formset.management_form }}
-
     {% for form in formset %}
         {{ form }}
         <br><br>
     {% endfor %}
     <input type="submit" value="Order Soups">
 </form>
+</div>
+{% endblock %}

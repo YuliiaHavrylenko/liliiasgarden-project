@@ -1,2 +1,6 @@
-<h1>Liliia's Garden</h1>
-<a href="{% url 'order' %}">Order a soup</a>
+{% extends 'soup/base.html' %}
+{% block content %}
+    <div class="text-center"></div>
+    {% load static %}
+<img src="{% static 'lilias-garden.jpg' %}" class="img-fluid" alt="Liliia's Garden">
+{% endblock %}

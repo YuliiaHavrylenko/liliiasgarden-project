@@ -18,9 +18,12 @@ def order(request):
             note = 'Thanks for ordering! Your %s soup with %s and %s is on its way.' \
                    % (filled_form.cleaned_data['size'], filled_form.cleaned_data['topping1'],
                       filled_form.cleaned_data['topping2'],)
-            new_form = SoupForm
-            return render(request, 'soup/order.html',
-                          {"created_soup_pk": created_soup_pk, 'soupform': new_form, 'note': note,
+            filled_form = SoupForm()
+        else:
+            created_soup_pk = None
+            note = 'Order was not created, please try again'
+        return render(request, 'soup/order.html',
+                          {"created_soup_pk": created_soup_pk, 'soupform': filled_form, 'note': note,
                            'multiple_form': multiple_form})
     else:
         form = SoupForm
@@ -39,11 +42,8 @@ def soups(request):
         if filled_formset.is_valid():
             for form in filled_formset:
                 print(form.cleaned_data['topping1'])
-
             note = 'Soups have been ordered!'
-        else:
-            note = 'Order was not created, please try again'
-        return render(request, 'soup/soups.html', {'note': note, 'formset': formset})
+            return render(request, 'soup/soups.html', {'note': note, 'formset': formset})
     else:
         return render(request, 'soup/soups.html', {'formset': formset})
 
@@ -57,5 +57,7 @@ def edit_order(request, pk):
             filled_form.save()
             form = filled_form
             note = 'Order has been updated.'
-            return render(request, 'soup/edit_order.html', {'note': note, 'soupform': form, 'soup': soup})
+        else:
+            note = "Soup order has failed. Try again"
+        return render(request, 'soup/edit_order.html', {'note': note, 'soupform': form, 'soup': soup})
     return render(request, 'soup/edit_order.html', {'soupform': form, 'soup': soup})
